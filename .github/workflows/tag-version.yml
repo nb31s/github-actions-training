@@ -5,11 +5,11 @@ on:
       - main
 jobs:
   release:
+    runs-on: ubuntu-18.04
     name: add tag
-    runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v1
+      - name: GitHub App token
+        uses: tibdex/github-app-token@v1.0.2
       - name: add tag
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -19,4 +19,3 @@ jobs:
         run: |
           git tag v1
           git push origin v1
-
