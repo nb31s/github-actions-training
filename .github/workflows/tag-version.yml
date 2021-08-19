@@ -11,5 +11,5 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
         TAG=${{ github.event.pull_request.title }}
-        git tag ${TAG}
-        git push origin ${TAG}
+        git tag `echo ${TAG}`
+        git push origin `echo ${TAG}`
