@@ -7,9 +7,9 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
-    env:
-      TAG: ${{github.event.pull_request.title}}
     steps:
       - uses: actions/checkout@v2
-      - run: git tag ${TAG}
-      - run: git push origin ${TAG}
+      - run: |
+        TAG="${{ github.event.pull_request.title }}"
+        git tag ${TAG}
+        git push origin ${TAG}
