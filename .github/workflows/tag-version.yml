@@ -8,25 +8,27 @@ jobs:
     runs-on: ubuntu-18.04
     name: test
     steps:
-      - name: Generate token
-        id: generate_token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
-          # Optional (defaults to the current repository).
-          # repository: owner/repo
-      - name: Use token
-        env:
-          TOKEN: ${{ steps.generate_token.outputs.token }}
-        run: |
-          echo "The generated token is masked: ${TOKEN}"
+#      - name: Generate token
+#        id: generate_token
+#        uses: tibdex/github-app-token@v1
+#        with:
+#          app_id: ${{ secrets.APP_ID }}
+#          private_key: ${{ secrets.PRIVATE_KEY }}
+#          # Optional (defaults to the current repository).
+#          # repository: owner/repo
+#      - name: Use token
+#        env:
+#          TOKEN: ${{ steps.generate_token.outputs.token }}
+#        run: |
+#          echo "The generated token is masked: ${TOKEN}"
       - name: add tag
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          TAG: ${{github.event.pull_request.title}}
-          REPO: ${{github.repository}}
-          COMMIT: ${{github.sha}}
+#        env:
+#          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#          TAG: ${{github.event.pull_request.title}}
+#          REPO: ${{github.repository}}
+#          COMMIT: ${{github.sha}}
         run: |
+          echo ${{ secrets.APP_ID }}
+          echo ${{ secrets.PRIVATE_KEY }}
           git tag v1
           git push origin v1
