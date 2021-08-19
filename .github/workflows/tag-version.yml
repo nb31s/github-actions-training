@@ -2,14 +2,15 @@ name: test
 
 on:
   pull_request:
-    types: [ ready_for_review ]
+    types: [ closed ]
 
 jobs:
   main:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: echo ${{ github.event.pull_request.head.ref }}
       - run: git fetch origin ${{ github.event.pull_request.head.ref }}
-      - run: git checkout ${{ github.event.pull_request.head.ref }}
-      - run: git tag v1
-      - run: git push origin v1
+#      - run: git checkout ${{ github.event.pull_request.head.ref }}
+      - run: git tag v2
+      - run: git push origin v2
