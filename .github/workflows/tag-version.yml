@@ -1,36 +1,26 @@
-name: add version tag
+name: comment_on_pr
+
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [ ready_for_review ]
+
 jobs:
-  release:
-    runs-on: ubuntu-18.04
-    name: test
+  comment:
+    runs-on: ubuntu-latest
     steps:
-#      - name: Generate token
-#        id: generate_token
-#        uses: tibdex/github-app-token@v1
-#        with:
-#          app_id: ${{ secrets.APP_ID }}
-#          private_key: ${{ secrets.PRIVATE_KEY }}
-#          # Optional (defaults to the current repository).
-#          # repository: owner/repo
-#      - name: Use token
-#        env:
-#          TOKEN: ${{ steps.generate_token.outputs.token }}
-#        run: |
-#          echo "The generated token is masked: ${TOKEN}"
-      - name: add tag
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          TAG: ${{github.event.pull_request.title}}
-          REPO: ${{github.repository}}
-          COMMIT: ${{github.sha}}
+      - name: Create comments
         run: |
-          echo ${ env.GITHUB_TOKEN }
-          echo ${{ env.GITHUB_TOKEN }}
-          echo ${{ secrets.APP_ID }}
-          echo ${{ secrets.PRIVATE_KEY }}
-          git tag v1
-          git push origin v1
+          echo "1st" >> comments
+          echo "2nd" >> comments
+          echo "3rd" >> comments
+          sed -i -z 's/\n/\\n/g' comments
+
+      - name: Post multi-line comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ github.event.pull_request.comments_url }}
+        run: |
+          curl -X POST \
+               -H "Authorization: token ${GITHUB_TOKEN}" \
+               -d "{\"body\": \"$(cat comments)\"}" \
+               ${URL}
