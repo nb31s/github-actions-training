@@ -17,6 +17,6 @@ jobs:
           REPO: ${{github.repository}}
           COMMIT: ${{github.sha}}
         run: |
-          echo hoge
-
+          git tag v1
+          git push origin v1
 
