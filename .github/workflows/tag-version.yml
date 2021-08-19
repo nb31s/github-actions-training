@@ -1,26 +1,16 @@
-name: comment_on_pr
+name: test
 
 on:
   pull_request:
-    types: [ ready_for_review ]
+    types: [ closed ]
 
 jobs:
-  comment:
+  main:
     runs-on: ubuntu-latest
     steps:
-      - name: Create comments
-        run: |
-          echo "1st" >> comments
-          echo "2nd" >> comments
-          echo "3rd" >> comments
-          sed -i -z 's/\n/\\n/g' comments
-
-      - name: Post multi-line comments
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          URL: ${{ github.event.pull_request.comments_url }}
-        run: |
-          curl -X POST \
-               -H "Authorization: token ${GITHUB_TOKEN}" \
-               -d "{\"body\": \"$(cat comments)\"}" \
-               ${URL}
+      - uses: actions/checkout@v2
+      - run: echo ${{ github.event.pull_request.head.ref }}
+      - run: git fetch origin ${{ github.event.pull_request.head.ref }}
+#      - run: git checkout ${{ github.event.pull_request.head.ref }}
+      - run: git tag v2
+      - run: git push origin v2
