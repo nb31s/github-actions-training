@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: add tag
         env:
-          TAG: ${{github.event.pull_request.title}}
-      - run: echo ${{ env.TAG }}
+          TAG: ${{ github.event.pull_request.title }}
+        run: echo ${{ env.TAG }}
