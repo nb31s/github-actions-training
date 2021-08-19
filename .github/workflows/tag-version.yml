@@ -12,4 +12,6 @@ jobs:
       - name: add tag
         env:
           TAG: ${{ github.event.pull_request.title }}
-        run: echo ${{ env.TAG }}
+        run: |
+          git tag ${{ env.TAG }}
+          git push origin ${{ env.TAG }}
