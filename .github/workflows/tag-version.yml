@@ -13,7 +13,7 @@ jobs:
         env:
           TAG_NAME: ${{ github.event.pull_request.title }}
           TAG_NUMBER: ${{ github.event.pull_request.number }}
-          TAG: ${{ format('{{{0}_{1}}}', 'AAA', 'BBB') }}
+          TAG: ${{ format('{0}_{1}', 'AAA', 'BBB') }}
         run: |
           git tag ${{ env.TAG }}
           git push origin ${{ env.TAG }}
