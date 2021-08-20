@@ -11,11 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     steps:
-      - uses: actions/checkout@v2
-      - name: add tag
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          TAG_NUMBER: ${{ github.event.pull_request.number }}
-          TAG_NAME: ${{ github.event.pull_request.title }}
-        run: |
-          git tag ${{ env.TAG_NAME }}_#${{ env.TAG_NUMBER }}
-          git push origin ${{ env.TAG_NAME }}_#${{ env.TAG_NUMBER }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.pull_request.title }}
+          release_name: ${{ github.event.pull_request.title }}
+          body: ${{ github.event.pull_request.body }}
+          draft: false
+          prerelease: false
