@@ -11,7 +11,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: add tag
         env:
-          TAG_NAME: ${{ github.event.pull_request.title }}${{ github.event.pull_request.number }}
+          TAG_NAME: ${{ github.event.pull_request.title }}
+          TAG_NUMBER: ${{ github.event.pull_request.number }}
+          TAG: ${{ env.TAG_NAME }}${{ env.TAG_NUMBER }}
         run: |
           git tag ${{ env.TAG }}
           git push origin ${{ env.TAG }}
