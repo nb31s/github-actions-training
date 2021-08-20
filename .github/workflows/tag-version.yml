@@ -14,5 +14,6 @@ jobs:
           TAG_NUMBER: ${{ github.event.pull_request.number }}
           TAG_NAME: ${{ github.event.pull_request.title }}
         run: |
-          git tag #${{ env.TAG_NUMBER }}_${{ env.TAG_NAME }}
-          git push origin #${{ env.TAG_NUMBER }}_${{ env.TAG_NAME }}
+          git checkout
+          git tag ${{ env.TAG_NAME }}_#${{ env.TAG_NUMBER }}
+          git push origin ${{ env.TAG_NAME }}_#${{ env.TAG_NUMBER }}
