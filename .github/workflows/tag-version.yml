@@ -2,11 +2,14 @@ name: test
 
 on:
   pull_request:
-    types: [ ready_for_review ]
+    branches:
+      - main
+      types: [ closed ]
 
 jobs:
   main:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v2
       - name: add tag
