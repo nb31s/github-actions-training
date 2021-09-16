@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@master
       - name: Get current date time
         id: date_time
-        run: echo "::set-output name=now::$(date_time +'%Y-%m-%d_%h:%i:%s')"
+        run: echo "::set-output name=now::$(date +'%Y-%m-%dT%H:%M:%S')"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
