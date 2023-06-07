@@ -2,12 +2,11 @@ name: hogefuga
 
 on:
   pull_request:
-    types: [ opened ]
+    types: [ labeled ]
 
 jobs:
   main:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == true
     steps:
       - name: Checkout code
         uses: actions/checkout@master
