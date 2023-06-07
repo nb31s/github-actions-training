@@ -1,4 +1,4 @@
-name: test
+name: hogefuga
 
 on:
   pull_request:
