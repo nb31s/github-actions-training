@@ -11,6 +11,3 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - name: Get current date time
-        id: date_time
-        run: echo "::set-output name=now::$(date +'%Y-%m-%dT%H_%M_%SZ')"
