@@ -9,8 +9,37 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == true
     steps:
+      - name: Force failure
+        run: exit 1
       - name: Checkout code
         uses: actions/checkout@master
       - name: Get current date time
         id: date_time
         run: echo "::set-output name=now::$(date +'%Y-%m-%dT%H_%M_%SZ')"
+
+  send-slack-notification:
+    needs: main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get PR author
+        id: get-author
+        run: echo "::set-output name=author::$(jq -r .pull_request.user.login < $GITHUB_EVENT_PATH)"
+
+      - name: Get Slack member ID
+        id: get-slack-id
+        run: |
+          author=${{ steps.get-author.outputs.author }}
+          slack_id=$(yq e ".github_to_slack.${author}" .github/workflows/mention-to-slack.yml)
+          echo "::set-output name=slack_id::${slack_id}"
+
+      - name: Send Slack notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2.1.1
+        with:
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          message: |
+            Playwright tests failed. Please check the details.
+            <@${{ steps.get-slack-id.outputs.slack_id }}>
