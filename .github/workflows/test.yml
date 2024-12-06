@@ -2,7 +2,7 @@ name: hogefuga
 
 on:
   pull_request:
-    types: [ opened ]
+    types: [ closed ]
 
 jobs:
   main:
