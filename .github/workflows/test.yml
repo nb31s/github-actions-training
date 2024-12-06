@@ -1,8 +1,8 @@
-name: hogefuga
+name: test-gha
 
 on:
   pull_request:
-    types: [ closed ]
+    types: [opened, synchronize, reopened]
 
 jobs:
   main:
