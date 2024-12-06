@@ -5,20 +5,20 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  main:
+  debug:
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == true
     steps:
-      - name: Force failure
-        run: exit 1
       - name: Checkout code
         uses: actions/checkout@master
       - name: Get current date time
         id: date_time
         run: echo "::set-output name=now::$(date +'%Y-%m-%dT%H_%M_%SZ')"
+      - name: Force failure
+        run: exit 1
 
   send-slack-notification:
-    needs: main
+    needs: debug
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
