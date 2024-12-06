@@ -2,15 +2,12 @@ name: hogefuga
 
 on:
   pull_request:
-    types: [ opened ]
+    types: [ labeled ]
 
 jobs:
   main:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == true
+    if: github.event.label.name == 'larastan'
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - name: Get current date time
-        id: date_time
-        run: echo "::set-output name=now::$(date +'%Y-%m-%dT%H_%M_%SZ')"
