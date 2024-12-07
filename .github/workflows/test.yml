@@ -4,21 +4,26 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+env:
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
 jobs:
-  main:
+  debug:
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == true
     steps:
-      - name: Force failure
-        run: exit 1
       - name: Checkout code
         uses: actions/checkout@master
       - name: Get current date time
         id: date_time
-        run: echo "::set-output name=now::$(date +'%Y-%m-%dT%H_%M_%SZ')"
+        run: echo "now=${$(date +'%Y-%m-%dT%H_%M_%SZ')}" >> $GITHUB_OUTPUT
+      - name: Force failure
+        run: exit 1
 
   send-slack-notification:
-    needs: main
+    needs: debug
+    if: failure()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -26,20 +31,37 @@ jobs:
 
       - name: Get PR author
         id: get-author
-        run: echo "::set-output name=author::$(jq -r .pull_request.user.login < $GITHUB_EVENT_PATH)"
+        run: echo "author=$(jq -r .pull_request.user.login < $GITHUB_EVENT_PATH)" >> $GITHUB_OUTPUT
 
       - name: Get Slack member ID
         id: get-slack-id
         run: |
           author=${{ steps.get-author.outputs.author }}
-          slack_id=$(yq e ".github_to_slack.${author}" .github/workflows/mention-to-slack.yml)
-          echo "::set-output name=slack_id::${slack_id}"
+          slack_member_id=$(yq e ".${author}" .github/mention-to-slack-config.yml)
+          echo "slack_member_id=${slack_member_id}" >> $GITHUB_OUTPUT
 
       - name: Send Slack notification
-        if: failure()
-        uses: rtCamp/action-slack-notify@v2.1.1
+        id: slack
+        uses: slackapi/slack-github-action@v1.16.0
         with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          message: |
-            Playwright tests failed. Please check the details.
-            <@${{ steps.get-slack-id.outputs.slack_id }}>
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "test"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Author: <@${{ steps.get-slack-id.outputs.slack_member_id }}>"
+                    }
+                  ]
+                }
+              ]
+            }
