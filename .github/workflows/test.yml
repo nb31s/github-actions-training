@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@master
       - name: Get current date time
         id: date_time
-        run: echo "::set-output name=now::$(date +'%Y-%m-%dT%H_%M_%SZ')"
+        run: echo "now=${$(date +'%Y-%m-%dT%H_%M_%SZ')}" >> $GITHUB_OUTPUT
       - name: Force failure
         run: exit 1
 
@@ -37,7 +37,7 @@ jobs:
         id: get-slack-id
         run: |
           author=${{ steps.get-author.outputs.author }}
-          slack_id=$(yq e ".github_to_slack.${author}" .github/mention-to-slack.yml)
+          slack_id=$(yq e ".${author}" .github/mention-to-slack-config.yml)
           echo "slack_id=${slack_id}" >> $GITHUB_OUTPUT
 
       - name: Send Slack notification
