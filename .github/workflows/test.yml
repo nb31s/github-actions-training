@@ -19,6 +19,7 @@ jobs:
 
   send-slack-notification:
     needs: debug
+    if: failure()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
