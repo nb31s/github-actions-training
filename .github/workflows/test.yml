@@ -32,7 +32,7 @@ jobs:
         id: get-slack-id
         run: |
           author=${{ steps.get-author.outputs.author }}
-          slack_id=$(yq e ".github_to_slack.${author}" .github/workflows/mention-to-slack.yml)
+          slack_id=$(yq e ".github_to_slack.${author}" .github/mention-to-slack.yml)
           echo "::set-output name=slack_id::${slack_id}"
 
       - name: Send Slack notification
