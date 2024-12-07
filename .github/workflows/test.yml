@@ -37,8 +37,8 @@ jobs:
         id: get-slack-id
         run: |
           author=${{ steps.get-author.outputs.author }}
-          slack_id=$(yq e ".${author}" .github/mention-to-slack-config.yml)
-          echo "slack_id=${slack_id}" >> $GITHUB_OUTPUT
+          slack_member_id=$(yq e ".${author}" .github/mention-to-slack-config.yml)
+          echo "slack_member_id=${slack_member_id}" >> $GITHUB_OUTPUT
 
       - name: Send Slack notification
         id: slack
@@ -59,7 +59,7 @@ jobs:
                   "elements": [
                     {
                       "type": "mrkdwn",
-                      "text": "Author: <@${{ steps.get-slack-id.outputs.slack_id }}>"
+                      "text": "Author: <@${{ steps.get-slack-id.outputs.slack_member_id }}>"
                     }
                   ]
                 }
