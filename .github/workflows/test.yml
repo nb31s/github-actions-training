@@ -37,10 +37,27 @@ jobs:
           echo "::set-output name=slack_id::${slack_id}"
 
       - name: Send Slack notification
-        if: failure()
-        uses: rtCamp/action-slack-notify@v2.1.1
+        id: slack
+        uses: slackapi/slack-github-action@v1.16.0
         with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          message: |
-            Playwright tests failed. Please check the details.
-            <@${{ steps.get-slack-id.outputs.slack_id }}>
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "test"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Author: <@${{ steps.get-slack-id.outputs.slack_id }}>"
+                    }
+                  ]
+                }
+              ]
+            }
